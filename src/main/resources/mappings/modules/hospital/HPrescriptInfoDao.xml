@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.hospital.dao.HPrescriptInfoDao">
+    
+	<sql id="hPrescriptInfoColumns">
+		a.id AS "id",
+		a.diagnose_id AS "diagnoseId",
+		a.charge_id AS "chargeId",
+		a.durg_id AS "durgId",
+		a.durg_num AS "durgNum",
+		a.durg_usage AS "durgUsage",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="hPrescriptInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="HPrescriptInfo">
+		SELECT 
+			<include refid="hPrescriptInfoColumns"/>
+		FROM h_prescript_info a
+		<include refid="hPrescriptInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HPrescriptInfo">
+		SELECT 
+			<include refid="hPrescriptInfoColumns"/>
+		FROM h_prescript_info a
+		<include refid="hPrescriptInfoJoins"/>
+		<where>
+			
+			<if test="diagnoseId != null and diagnoseId != ''">
+				AND a.diagnose_id = #{diagnoseId}
+			</if>
+			<if test="chargeId != null and chargeId != ''">
+				AND a.charge_id = #{chargeId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HPrescriptInfo">
+		SELECT 
+			<include refid="hPrescriptInfoColumns"/>
+		FROM h_prescript_info a
+		<include refid="hPrescriptInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO h_prescript_info(
+			id,
+			diagnose_id,
+			charge_id,
+			durg_id,
+			durg_num,
+			durg_usage,
+			update_date,
+			remarks
+		) VALUES (
+			#{id},
+			#{diagnoseId},
+			#{chargeId},
+			#{durgId},
+			#{durgNum},
+			#{durgUsage},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE h_prescript_info SET 	
+			diagnose_id = #{diagnoseId},
+			charge_id = #{chargeId},
+			durg_id = #{durgId},
+			durg_num = #{durgNum},
+			durg_usage = #{durgUsage},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM h_prescript_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

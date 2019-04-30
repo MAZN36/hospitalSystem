@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.hospital.dao.HDoctorDao">
+    
+	<sql id="hDoctorColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.job_number AS "jobNumber",
+		a.job_name AS "jobName",
+		a.education AS "education",
+		a.work_year AS "workYear",
+		a.nation AS "nation",
+		a.doctor_duty AS "doctorDuty",
+		a.sts AS "sts",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.introduce AS "introduce",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="hDoctorJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="HDoctor">
+		SELECT 
+			<include refid="hDoctorColumns"/>
+		FROM h_doctor a
+		<include refid="hDoctorJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HDoctor">
+		SELECT 
+			<include refid="hDoctorColumns"/>
+		FROM h_doctor a
+		<include refid="hDoctorJoins"/>
+		<where>
+			
+			<if test="jobNumber != null and jobNumber != ''">
+				AND a.job_number = #{jobNumber}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HDoctor">
+		SELECT 
+			<include refid="hDoctorColumns"/>
+		FROM h_doctor a
+		<include refid="hDoctorJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO h_doctor(
+			id,
+			user_id,
+			job_number,
+			job_name,
+			education,
+			work_year,
+			nation,
+			doctor_duty,
+			sts,
+			update_date,
+			remarks,
+			introduce
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{jobNumber},
+			#{jobName},
+			#{education},
+			#{workYear},
+			#{nation},
+			#{doctorDuty},
+			#{sts},
+			#{updateDate},
+			#{remarks},
+			#{introduce}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE h_doctor SET 	
+			user_id = #{user.id},
+			job_number = #{jobNumber},
+			job_name = #{jobName},
+			education = #{education},
+			work_year = #{workYear},
+			nation = #{nation},
+			doctor_duty = #{doctorDuty},
+			sts = #{sts},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			introduce = #{introduce}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM h_doctor
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.hospital.dao.HDiagnoseInfoDao">
+    
+	<sql id="hDiagnoseInfoColumns">
+		a.id AS "id",
+		a.patient_id AS "patientId",
+		a.registration_id AS "registrationId",
+		a.doctor_id AS "doctorId",
+		a.dept_id AS "deptId",
+		a.symptom AS "symptom",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="hDiagnoseInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="HDiagnoseInfo">
+		SELECT 
+			<include refid="hDiagnoseInfoColumns"/>
+		FROM h_diagnose_info a
+		<include refid="hDiagnoseInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HDiagnoseInfo">
+		SELECT 
+			<include refid="hDiagnoseInfoColumns"/>
+		FROM h_diagnose_info a
+		<include refid="hDiagnoseInfoJoins"/>
+		<where>
+			
+			<if test="patientId != null and patientId != ''">
+				AND a.patient_id = #{patientId}
+			</if>
+			<if test="registrationId != null and registrationId != ''">
+				AND a.registration_id = #{registrationId}
+			</if>
+			<if test="doctorId != null and doctorId != ''">
+				AND a.doctor_id = #{doctorId}
+			</if>
+			<if test="deptId != null and deptId != ''">
+				AND a.dept_id = #{deptId}
+			</if>
+			<if test="symptom != null and symptom != ''">
+				AND a.symptom LIKE 
+					<if test="dbName == 'oracle'">'%'||#{symptom}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{symptom}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{symptom},'%')</if>
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks LIKE 
+					<if test="dbName == 'oracle'">'%'||#{remarks}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{remarks}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{remarks},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HDiagnoseInfo">
+		SELECT 
+			<include refid="hDiagnoseInfoColumns"/>
+		FROM h_diagnose_info a
+		<include refid="hDiagnoseInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO h_diagnose_info(
+			id,
+			patient_id,
+			registration_id,
+			doctor_id,
+			dept_id,
+			symptom,
+			update_date,
+			remarks
+		) VALUES (
+			#{id},
+			#{patientId},
+			#{registrationId},
+			#{doctorId},
+			#{deptId},
+			#{symptom},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE h_diagnose_info SET 	
+			patient_id = #{patientId},
+			registration_id = #{registrationId},
+			doctor_id = #{doctorId},
+			dept_id = #{deptId},
+			symptom = #{symptom},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM h_diagnose_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

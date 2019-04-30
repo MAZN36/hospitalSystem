@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.hospital.dao.HPatientDao">
+    
+	<sql id="hPatientColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.address AS "address",
+		a.blood_type AS "bloodType",
+		a.education AS "education",
+		a.sts AS "sts",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="hPatientJoins">
+	</sql>
+    
+	<select id="get" resultType="HPatient">
+		SELECT 
+			<include refid="hPatientColumns"/>
+		FROM h_patient a
+		<include refid="hPatientJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HPatient">
+		SELECT 
+			<include refid="hPatientColumns"/>
+		FROM h_patient a
+		<include refid="hPatientJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HPatient">
+		SELECT 
+			<include refid="hPatientColumns"/>
+		FROM h_patient a
+		<include refid="hPatientJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO h_patient(
+			id,
+			user_id,
+			address,
+			blood_type,
+			education,
+			sts,
+			update_date,
+			remarks
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{address},
+			#{bloodType},
+			#{education},
+			#{sts},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE h_patient SET 	
+			user_id = #{user.id},
+			address = #{address},
+			blood_type = #{bloodType},
+			education = #{education},
+			sts = #{sts},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM h_patient
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

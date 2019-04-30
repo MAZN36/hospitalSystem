@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.hospital.dao.HDrugInfoDao">
+    
+	<sql id="hDrugInfoColumns">
+		a.id AS "id",
+		a.drug_no AS "drugNo",
+		a.drug_name AS "drugName",
+		a.unit AS "unit",
+		a.code AS "code",
+		a.spec AS "spec",
+		a.produce_area AS "produceArea",
+		a.made_area AS "madeArea",
+		a.grug_remarks AS "grugRemarks",
+		a.rent_price AS "rentPrice",
+		a.sell_price AS "sellPrice",
+		a.inventory_num AS "inventoryNum",
+		a.sts AS "sts",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="hDrugInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="HDrugInfo">
+		SELECT 
+			<include refid="hDrugInfoColumns"/>
+		FROM h_drug_info a
+		<include refid="hDrugInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HDrugInfo">
+		SELECT 
+			<include refid="hDrugInfoColumns"/>
+		FROM h_drug_info a
+		<include refid="hDrugInfoJoins"/>
+		<where>
+			
+			<if test="drugNo != null and drugNo != ''">
+				AND a.drug_no = #{drugNo}
+			</if>
+			<if test="drugName != null and drugName != ''">
+				AND a.drug_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{drugName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{drugName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{drugName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HDrugInfo">
+		SELECT 
+			<include refid="hDrugInfoColumns"/>
+		FROM h_drug_info a
+		<include refid="hDrugInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO h_drug_info(
+			id,
+			drug_no,
+			drug_name,
+			unit,
+			code,
+			spec,
+			produce_area,
+			made_area,
+			grug_remarks,
+			rent_price,
+			sell_price,
+			inventory_num,
+			sts,
+			update_date,
+			remarks
+		) VALUES (
+			#{id},
+			#{drugNo},
+			#{drugName},
+			#{unit},
+			#{code},
+			#{spec},
+			#{produceArea},
+			#{madeArea},
+			#{grugRemarks},
+			#{rentPrice},
+			#{sellPrice},
+			#{inventoryNum},
+			#{sts},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE h_drug_info SET 	
+			drug_no = #{drugNo},
+			drug_name = #{drugName},
+			unit = #{unit},
+			code = #{code},
+			spec = #{spec},
+			produce_area = #{produceArea},
+			made_area = #{madeArea},
+			grug_remarks = #{grugRemarks},
+			rent_price = #{rentPrice},
+			sell_price = #{sellPrice},
+			inventory_num = #{inventoryNum},
+			sts = #{sts},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM h_drug_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

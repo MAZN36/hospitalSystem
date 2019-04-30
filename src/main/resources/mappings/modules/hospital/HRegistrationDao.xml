@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.hospital.dao.HRegistrationDao">
+    
+	<sql id="hRegistrationColumns">
+		a.id AS "id",
+		a.price AS "price",
+		a.doctor_id AS "doctorId",
+		a.registration_remarks AS "registrationRemarks",
+		a.registration_date AS "registrationDate",
+		a.book_date AS "bookDate",
+		a.office_id AS "office.id",
+		a.queue_no AS "queueNo",
+		a.sts AS "sts",
+		a.update_date AS "updateDate",
+		o7.name AS "office.name"
+	</sql>
+	
+	<sql id="hRegistrationJoins">
+		LEFT JOIN sys_office o7 ON o7.id = a.office_id
+	</sql>
+    
+	<select id="get" resultType="HRegistration">
+		SELECT 
+			<include refid="hRegistrationColumns"/>
+		FROM h_registration a
+		<include refid="hRegistrationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HRegistration">
+		SELECT 
+			<include refid="hRegistrationColumns"/>
+		FROM h_registration a
+		<include refid="hRegistrationJoins"/>
+		<where>
+			
+			<if test="doctorId != null and doctorId != ''">
+				AND a.doctor_id = #{doctorId}
+			</if>
+			<if test="registrationRemarks != null and registrationRemarks != ''">
+				AND a.registration_remarks LIKE 
+					<if test="dbName == 'oracle'">'%'||#{registrationRemarks}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{registrationRemarks}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{registrationRemarks},'%')</if>
+			</if>
+			<if test="registrationDate != null and registrationDate != ''">
+				AND a.registration_date = #{registrationDate}
+			</if>
+			<if test="bookDate != null and bookDate != ''">
+				AND a.book_date = #{bookDate}
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.office_id = #{office.id}
+			</if>
+			<if test="queueNo != null and queueNo != ''">
+				AND a.queue_no = #{queueNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HRegistration">
+		SELECT 
+			<include refid="hRegistrationColumns"/>
+		FROM h_registration a
+		<include refid="hRegistrationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO h_registration(
+			id,
+			price,
+			doctor_id,
+			registration_remarks,
+			registration_date,
+			book_date,
+			office_id,
+			queue_no,
+			sts,
+			update_date
+		) VALUES (
+			#{id},
+			#{price},
+			#{doctorId},
+			#{registrationRemarks},
+			#{registrationDate},
+			#{bookDate},
+			#{office.id},
+			#{queueNo},
+			#{sts},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE h_registration SET 	
+			price = #{price},
+			doctor_id = #{doctorId},
+			registration_remarks = #{registrationRemarks},
+			registration_date = #{registrationDate},
+			book_date = #{bookDate},
+			office_id = #{office.id},
+			queue_no = #{queueNo},
+			sts = #{sts},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM h_registration
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
