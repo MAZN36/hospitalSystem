@@ -5,8 +5,8 @@
 	<title>病人信息管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
+
 		$(document).ready(function() {
-			//$("#name").focus();
 			$("#inputForm").validate({
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
@@ -32,17 +32,48 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="hPatient" action="${ctx}/hospital/hPatient/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>		
+		<form:hidden path="user.id"/>
+		<form:hidden path="user.oldLoginName"/>
+		<sys:message content="${message}"/>
 		<div class="control-group">
-			<label class="control-label">用户id：</label>
+			<label class="control-label">姓名:</label>
 			<div class="controls">
-				<form:input path="user.id" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:input path="user.name" htmlEscape="false" maxlength="50" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">家庭住址：</label>
+			<label class="control-label">身份证号：</label>
 			<div class="controls">
-				<form:input path="address" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:input path="user.idCard" htmlEscape="false" maxlength="18" class="input-xlarge  digits required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">手机:</label>
+			<div class="controls">
+				<form:input path="user.mobile" htmlEscape="false" maxlength="11" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">年龄：</label>
+			<div class="controls">
+				<form:input path="user.age" htmlEscape="false" maxlength="3" class="input-xlarge  digits"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">性别：</label>
+			<div class="controls">
+				<form:select path="user.sex" class="input-xlarge ">
+					<form:options items="${fns:getDictList('sex')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">固定电话:</label>
+			<div class="controls">
+				<form:input path="user.phone" htmlEscape="false" maxlength="15" class="input-xlarge"/>
 			</div>
 		</div>
 		<div class="control-group">
@@ -62,11 +93,24 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">状态：</label>
+			<label class="control-label">邮箱:</label>
 			<div class="controls">
-				<form:select path="sts" class="input-xlarge ">
-					<form:options items="${fns:getDictList('sts_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				<form:input path="user.email" htmlEscape="false" maxlength="100" class="input-xlarge email"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">是否允许登录:</label>
+			<div class="controls">
+				<form:select path="sts">
+					<form:options items="${fns:getDictList('yes_no')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
+				<span class="help-inline"><font color="red">*</font> “是”代表此账号允许登录，“否”则表示此账号不允许登录</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">家庭住址：</label>
+			<div class="controls">
+				<form:input path="address" htmlEscape="false" maxlength="64" class="input-xlarge "/>
 			</div>
 		</div>
 		<div class="control-group">

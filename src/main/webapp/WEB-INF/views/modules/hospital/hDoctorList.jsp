@@ -36,17 +36,21 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>用户id</th>
+				<th>姓名</th>
 				<th>工号</th>
+				<th>科室</th>
+				<th>工龄</th>
 				<th>职称</th>
 				<th>学历</th>
-				<th>工龄</th>
-				<th>民族</th>
-				<th>职务</th>
-				<th>状态</th>
+				<th>年龄</th>
+				<th>性别</th>
+				<th>电话</th>
+				<th>手机</th>
+				<th>邮箱</th>
+				<th>是否允许登录</th>
 				<th>状态时间</th>
-				<th>备注</th>
 				<th>介绍</th>
+				<th>备注</th>
 				<shiro:hasPermission name="hospital:hDoctor:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -60,31 +64,43 @@
 					${hDoctor.jobNumber}
 				</td>
 				<td>
-					${fns:getDictLabel(hDoctor.jobName, '', '')}
-				</td>
-				<td>
-					${fns:getDictLabel(hDoctor.education, '', '')}
+					${hDoctor.user.office.name}
 				</td>
 				<td>
 					${hDoctor.workYear}
 				</td>
 				<td>
-					${hDoctor.nation}
+					${fns:getDictLabel(hDoctor.jobName, 'job_type', '')}
 				</td>
 				<td>
-					${hDoctor.doctorDuty}
+					${fns:getDictLabel(hDoctor.education, 'education_type', '')}
 				</td>
 				<td>
-					${fns:getDictLabel(hDoctor.sts, '', '')}
+					${hDoctor.user.age}
+				</td>
+				<td>
+					${fns:getDictLabel(hDoctor.user.sex, 'sex', '')}
+				</td>
+				<td>
+					${hDoctor.user.phone}
+				</td>
+				<td>
+					${hDoctor.user.mobile}
+				</td>
+				<td>
+					${hDoctor.user.email}
+				</td>
+				<td>
+					${fns:getDictLabel(hDoctor.sts, 'yes_no', '')}
 				</td>
 				<td>
 					<fmt:formatDate value="${hDoctor.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					${hDoctor.remarks}
+					${hDoctor.introduce}
 				</td>
 				<td>
-					${hDoctor.introduce}
+					${hDoctor.remarks}
 				</td>
 				<shiro:hasPermission name="hospital:hDoctor:edit"><td>
     				<a href="${ctx}/hospital/hDoctor/form?id=${hDoctor.id}">修改</a>

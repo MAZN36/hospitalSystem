@@ -5,6 +5,10 @@ package com.thinkgem.jeesite.modules.hospital.service;
 
 import java.util.List;
 
+import com.thinkgem.jeesite.modules.sys.dao.UserDao;
+import com.thinkgem.jeesite.modules.sys.entity.User;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +25,9 @@ import com.thinkgem.jeesite.modules.hospital.dao.HDoctorDao;
 @Service
 @Transactional(readOnly = true)
 public class HDoctorService extends CrudService<HDoctorDao, HDoctor> {
+
+	@Autowired
+	private UserDao userDao;
 
 	public HDoctor get(String id) {
 		return super.get(id);
@@ -41,6 +48,10 @@ public class HDoctorService extends CrudService<HDoctorDao, HDoctor> {
 	
 	@Transactional(readOnly = false)
 	public void delete(HDoctor hDoctor) {
+		User user = hDoctor.getUser();
+		userDao.delete(user);
+		// 清除用户缓存
+		UserUtils.clearCache(user);
 		super.delete(hDoctor);
 	}
 	

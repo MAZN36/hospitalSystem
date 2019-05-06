@@ -36,31 +36,35 @@
 		<div class="control-group">
 			<label class="control-label">药品编号：</label>
 			<div class="controls">
-				<form:input path="drugNo" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:input path="drugNo" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">药品名称：</label>
 			<div class="controls">
-				<form:input path="drugName" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:input path="drugName" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
-		<div class="control-group">
+	<%--	<div class="control-group">
 			<label class="control-label">计量单位：</label>
 			<div class="controls">
 				<form:input path="unit" htmlEscape="false" maxlength="64" class="input-xlarge "/>
 			</div>
-		</div>
+		</div>--%>
 		<div class="control-group">
 			<label class="control-label">条形码：</label>
 			<div class="controls">
-				<form:input path="code" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:input path="code" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">规格：</label>
 			<div class="controls">
-				<form:input path="spec" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:input path="spec" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
@@ -84,19 +88,22 @@
 		<div class="control-group">
 			<label class="control-label">药品进价：</label>
 			<div class="controls">
-				<form:input path="rentPrice" htmlEscape="false" class="input-xlarge  number"/>
+				<form:input path="rentPrice" htmlEscape="false" class="input-xlarge  number required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">药品售价：</label>
 			<div class="controls">
-				<form:input path="sellPrice" htmlEscape="false" class="input-xlarge  number"/>
+				<form:input path="sellPrice" htmlEscape="false" class="input-xlarge  number required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">库存数量：</label>
 			<div class="controls">
-				<form:input path="inventoryNum" htmlEscape="false" maxlength="11" class="input-xlarge  digits"/>
+				<form:input path="inventoryNum" htmlEscape="false" maxlength="11" class="input-xlarge  number digits required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">

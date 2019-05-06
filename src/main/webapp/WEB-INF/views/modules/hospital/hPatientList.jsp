@@ -33,11 +33,17 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>用户id</th>
-				<th>家庭住址</th>
+				<th>姓名</th>
+				<th>手机</th>
+				<th>身份证号</th>
+				<th>年龄</th>
+				<th>性别</th>
 				<th>血型</th>
-				<th>学历</th>
-				<th>状态</th>
+                <th>学历</th>
+                <th>固定电话</th>
+                <th>家庭住址</th>
+                <th>邮箱</th>
+                <th>是否允许登录</th>
 				<th>状态时间</th>
 				<th>备注</th>
 				<shiro:hasPermission name="hospital:hPatient:edit"><th>操作</th></shiro:hasPermission>
@@ -47,19 +53,37 @@
 		<c:forEach items="${page.list}" var="hPatient">
 			<tr>
 				<td><a href="${ctx}/hospital/hPatient/form?id=${hPatient.id}">
-					${hPatient.user.id}
+					${hPatient.user.name}
 				</a></td>
+                <td>
+                    ${hPatient.user.mobile}
+                </td>
+                <td>
+                    ${hPatient.user.idCard}
+                </td>
+                <td>
+                    ${hPatient.user.age}
+                </td>
+                <td>
+                    ${fns:getDictLabel(hPatient.user.sex, 'sex', '')}
+                </td>
+                <td>
+                    ${fns:getDictLabel(hPatient.bloodType, 'blood_type', '')}
+                </td>
+                <td>
+                    ${fns:getDictLabel(hPatient.education, 'education_type', '')}
+                </td>
+                <td>
+                    ${hPatient.user.phone}
+                </td>
 				<td>
 					${hPatient.address}
 				</td>
-				<td>
-					${fns:getDictLabel(hPatient.bloodType, '', '')}
+                <td>
+					${hPatient.user.email}
 				</td>
 				<td>
-					${fns:getDictLabel(hPatient.education, '', '')}
-				</td>
-				<td>
-					${hPatient.sts}
+                        ${fns:getDictLabel(hPatient.sts, 'yes_no', '')}
 				</td>
 				<td>
 					<fmt:formatDate value="${hPatient.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

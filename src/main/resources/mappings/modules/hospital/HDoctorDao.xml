@@ -15,11 +15,22 @@
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
 		a.introduce AS "introduce",
-		u2.name AS "user.name"
+		u2.name AS "user.name",
+		u2.phone AS "user.phone",
+		u2.mobile AS "user.mobile",
+		u2.email AS "user.email",
+		u2.office_id AS "user.office.id",
+		u2.photo AS "user.photo",
+		u2.login_name AS "user.oldLoginName",
+		u2.age AS "user.age",
+		u2.sex AS "user.sex",
+		u2.id_card AS "user.idCard",
+		c.name AS "user.office.name"
 	</sql>
 	
 	<sql id="hDoctorJoins">
 		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+		left join sys_office c on u2.office_id = c.id
 	</sql>
     
 	<select id="get" resultType="HDoctor">

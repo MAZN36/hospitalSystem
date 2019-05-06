@@ -75,6 +75,9 @@
 		a.remarks,
 		a.login_flag,
 		a.photo,
+		a.age,
+		a.sex,
+		a.id_card AS "idCard",
 		a.create_by AS "createBy.id",
 		a.create_date,
 		a.update_by AS "updateBy.id",
@@ -244,7 +247,10 @@
 			remarks, 
 			login_flag, 
 			photo, 
-			del_flag
+			del_flag,
+			age,
+			sex,
+			id_card
 		) VALUES (
 			#{id}, 
 			#{company.id}, 
@@ -264,7 +270,10 @@
 			#{remarks}, 
 			#{loginFlag}, 
 			#{photo}, 
-			#{delFlag}
+			#{delFlag},
+			#{age},
+			#{sex},
+			#{idCard}
 		)
 	</insert>
 	
@@ -285,7 +294,10 @@
 			update_date = #{updateDate}, 
 			remarks = #{remarks},
 			login_flag = #{loginFlag},
-			photo = #{photo}
+			photo = #{photo},
+			age = #{age},
+			sex = #{sex},
+			id_card = #{idCard}
 		WHERE id = #{id}
 	</update>
 	
@@ -335,8 +347,7 @@
 	
 	<!-- 逻辑删除用户 -->
 	<update id="delete">
-		UPDATE sys_user SET 
-			del_flag = #{DEL_FLAG_DELETE}
+		delete from sys_user
 		WHERE id = #{id}
 	</update>
 	

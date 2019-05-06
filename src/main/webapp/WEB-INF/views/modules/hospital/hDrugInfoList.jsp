@@ -41,7 +41,7 @@
 			<tr>
 				<th>药品编号</th>
 				<th>药品名称</th>
-				<th>计量单位</th>
+			<%--	<th>计量单位</th>--%>
 				<th>条形码</th>
 				<th>规格</th>
 				<th>生产厂家</th>
@@ -65,9 +65,9 @@
 				<td>
 					${hDrugInfo.drugName}
 				</td>
-				<td>
+				<%--<td>
 					${hDrugInfo.unit}
-				</td>
+				</td>--%>
 				<td>
 					${hDrugInfo.code}
 				</td>

@@ -10,10 +10,19 @@
 		a.education AS "education",
 		a.sts AS "sts",
 		a.update_date AS "updateDate",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		u2.name AS "user.name",
+		u2.phone AS "user.phone",
+		u2.mobile AS "user.mobile",
+		u2.email AS "user.email",
+		u2.login_name AS "user.oldLoginName",
+		u2.age AS "user.age",
+		u2.sex AS "user.sex",
+		u2.id_card AS "user.idCard"
 	</sql>
 	
 	<sql id="hPatientJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
 	</sql>
     
 	<select id="get" resultType="HPatient">
