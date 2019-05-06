@@ -55,5 +55,14 @@ public class OfficeService extends TreeService<OfficeDao, Office> {
 		super.delete(office);
 		UserUtils.removeCache(UserUtils.CACHE_OFFICE_LIST);
 	}
+
+	/**
+	 * 通过parentId查找子类
+	 * @param office
+	 * @return
+	 */
+	public List<Office> findByParentId(Office office){
+		return dao.findByParentId(office);
+	}
 	
 }
