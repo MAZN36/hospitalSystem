@@ -10,7 +10,10 @@ import java.util.List;
 
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.Group;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -541,5 +544,19 @@ public class SystemService extends BaseService implements InitializingBean {
 	}
 	
 	///////////////// Synchronized to the Activiti end //////////////////
-	
+
+	public User loginH5(String userName,String password){
+		User user = this.getUserByLoginName(userName);
+		if (user != null) {
+			if (Global.NO.equals(user.getLoginFlag())){
+				throw new AuthenticationException("该已帐号禁止登录.");
+			}
+			if (validatePassword(password,user.getPassword())){
+				return user;
+			}else {
+				throw new AuthenticationException("用户名或密码错误.");
+			}
+		}
+		return null;
+	}
 }

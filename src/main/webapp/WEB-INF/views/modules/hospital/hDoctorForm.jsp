@@ -8,13 +8,6 @@
 		$(document).ready(function() {
             $("#no").focus();
 			$("#inputForm").validate({
-                rules: {
-                    jobNumber: {remote: "${ctx}/hospital/hDoctor/checkLoginName?oldLoginName=" + encodeURIComponent('${hDoctor.user.loginName}')}
-                },
-                messages: {
-                    jobNumber: {remote: "用户登录名已存在"},
-                    confirmNewPassword: {equalTo: "输入与上面相同的密码"}
-                },
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
 					form.submit();

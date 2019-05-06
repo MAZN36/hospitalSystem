@@ -4,6 +4,7 @@
     
 	<sql id="hRegistrationColumns">
 		a.id AS "id",
+		a.patient_id AS "patientId",
 		a.price AS "price",
 		a.doctor_id AS "doctorId",
 		a.registration_remarks AS "registrationRemarks",
@@ -34,12 +35,15 @@
 		FROM h_registration a
 		<include refid="hRegistrationJoins"/>
 		<where>
-			
+
 			<if test="doctorId != null and doctorId != ''">
 				AND a.doctor_id = #{doctorId}
 			</if>
+			<if test="patientId != null and patientId != ''">
+				AND a.patient_id = #{patientId}
+			</if>
 			<if test="registrationRemarks != null and registrationRemarks != ''">
-				AND a.registration_remarks LIKE 
+				AND a.registration_remarks LIKE
 					<if test="dbName == 'oracle'">'%'||#{registrationRemarks}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{registrationRemarks}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{registrationRemarks},'%')</if>
@@ -48,10 +52,20 @@
 				AND a.registration_date = #{registrationDate}
 			</if>
 			<if test="bookDate != null and bookDate != ''">
-				AND a.book_date = #{bookDate}
+				AND DATE_FORMAT(a.book_date,'%Y-%m-%d')=DATE_FORMAT(#{bookDate},'%Y-%m-%d')
 			</if>
 			<if test="office != null and office.id != null and office.id != ''">
 				AND a.office_id = #{office.id}
+			</if>
+			<if test="sts!=null and sts!=''">
+				<choose>
+					<when test="sts=='AB'">
+						AND a.sts in ('A','B')
+					</when>
+					<otherwise>
+						AND a.sts = #{sts}
+					</otherwise>
+				</choose>
 			</if>
 			<if test="queueNo != null and queueNo != ''">
 				AND a.queue_no = #{queueNo}
@@ -89,6 +103,7 @@
 		INSERT INTO h_registration(
 			id,
 			price,
+			patient_id,
 			doctor_id,
 			registration_remarks,
 			registration_date,
@@ -100,6 +115,7 @@
 		) VALUES (
 			#{id},
 			#{price},
+			#{patientId},
 			#{doctorId},
 			#{registrationRemarks},
 			#{registrationDate},
@@ -115,6 +131,7 @@
 		UPDATE h_registration SET 	
 			price = #{price},
 			doctor_id = #{doctorId},
+			patient_id = #{patientId},
 			registration_remarks = #{registrationRemarks},
 			registration_date = #{registrationDate},
 			book_date = #{bookDate},
@@ -129,5 +146,9 @@
 		DELETE FROM h_registration
 		WHERE id = #{id}
 	</update>
+
+	<select id="maxQueueNo" resultType="java.lang.Integer">
+		select max(queue_no) from h_registration;
+	</select>
 	
 </mapper>

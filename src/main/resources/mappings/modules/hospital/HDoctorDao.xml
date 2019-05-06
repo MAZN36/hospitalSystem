@@ -47,9 +47,14 @@
 		FROM h_doctor a
 		<include refid="hDoctorJoins"/>
 		<where>
-			
 			<if test="jobNumber != null and jobNumber != ''">
 				AND a.job_number = #{jobNumber}
+			</if>
+            <if test="user!=null and user.office != null and user.office.id != null and user.office.id != ''">
+                AND u2.office_id = #{user.office.id}
+            </if>
+			<if test="user!=null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
 			</if>
 		</where>
 		<choose>

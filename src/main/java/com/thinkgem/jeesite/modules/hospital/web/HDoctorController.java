@@ -29,6 +29,7 @@ import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.hospital.entity.HDoctor;
 import com.thinkgem.jeesite.modules.hospital.service.HDoctorService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,13 +91,12 @@ public class HDoctorController extends BaseController {
 		if (StringUtils.isNotBlank(user.getNewPassword())) {
 			user.setPassword(SystemService.entryptPassword(user.getNewPassword()));
 		}else {
-			user.setPassword(DictUtils.getDictLabel("1","default_password","123456"));
+			user.setPassword(SystemService.entryptPassword(DictUtils.getDictLabel("1","default_password","123456")));
 		}
 		// 角色数据有效性验证，过滤不在授权内的角色
-		Role role = new Role();
-		role.setRoleType("user");
-		role.setEnname("doctor");
-		List<Role> roleList = systemService.findRole(role);
+		Role patient = systemService.getRoleByEnname("doctor");
+		List<Role> roleList = new ArrayList<Role>();
+		roleList.add(patient);
 		user.setRoleList(roleList);
 		// 保存用户信息
 		systemService.saveUser(user);

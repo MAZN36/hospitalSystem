@@ -43,5 +43,13 @@ public class HRegistrationService extends CrudService<HRegistrationDao, HRegistr
 	public void delete(HRegistration hRegistration) {
 		super.delete(hRegistration);
 	}
+
+	/**
+	 * 获取排队最大值
+	 * @return
+	 */
+	public Integer maxQueueNo(){
+		return dao.maxQueueNo();
+	}
 	
 }

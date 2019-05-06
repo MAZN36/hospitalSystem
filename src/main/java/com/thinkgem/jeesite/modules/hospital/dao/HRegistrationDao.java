@@ -14,5 +14,7 @@ import com.thinkgem.jeesite.modules.hospital.entity.HRegistration;
  */
 @MyBatisDao
 public interface HRegistrationDao extends CrudDao<HRegistration> {
+
+    public Integer maxQueueNo();
 	
 }

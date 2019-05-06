@@ -27,6 +27,7 @@ import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.hospital.entity.HPatient;
 import com.thinkgem.jeesite.modules.hospital.service.HPatientService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,12 +90,11 @@ public class HPatientController extends BaseController {
 		if (StringUtils.isNotBlank(user.getNewPassword())) {
 			user.setPassword(SystemService.entryptPassword(user.getNewPassword()));
 		}else {
-			user.setPassword(DictUtils.getDictLabel("1","default_password","123456"));
+			user.setPassword(SystemService.entryptPassword(DictUtils.getDictLabel("1","default_password","123456")));
 		}
-		Role role = new Role();
-		role.setRoleType("user");
-		role.setEnname("patient");
-		List<Role> roleList = systemService.findRole(role);
+		Role patient = systemService.getRoleByEnname("patient");
+		List<Role> roleList = new ArrayList<Role>();
+		roleList.add(patient);
 		user.setRoleList(roleList);
 		systemService.saveUser(user);
 		hPatient.setUser(user);// 保存用户信息

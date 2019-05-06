@@ -19,6 +19,7 @@ public class HRegistration extends DataEntity<HRegistration> {
 	
 	private static final long serialVersionUID = 1L;
 	private Double price;		// 挂号价格
+	private String patientId;   //病人id
 	private String doctorId;		// 挂号医师id
 	private String registrationRemarks;		// 症状
 	private Date registrationDate;		// 挂号时间
@@ -104,5 +105,12 @@ public class HRegistration extends DataEntity<HRegistration> {
 	public void setSts(String sts) {
 		this.sts = sts;
 	}
-	
+
+	public String getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(String patientId) {
+		this.patientId = patientId;
+	}
 }
