@@ -102,7 +102,9 @@
 		<div class="control-group">
 			<label class="control-label">状态：</label>
 			<div class="controls">
-				<form:input path="sts" htmlEscape="false" maxlength="5" class="input-xlarge "/>
+				<form:select path="sts" class="input-xlarge ">
+					<form:options items="${fns:getDictList('sts_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
 			</div>
 		</div>
 		<div class="control-group">

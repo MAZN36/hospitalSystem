@@ -71,7 +71,7 @@
 			<label class="control-label">挂号科室：</label>
 			<div class="controls">
 				<sys:treeselect id="office" name="office.id" value="${hRegistration.office.id}" labelName="office.name" labelValue="${hRegistration.office.name}"
-					title="部门" url="/sys/office/treeData?type=2" cssClass="" allowClear="true" notAllowSelectParent="true"/>
+					title="科室" url="/sys/office/treeData?type=2" cssClass="" allowClear="true" notAllowSelectParent="true"/>
 			</div>
 		</div>
 		<div class="control-group">
@@ -84,8 +84,7 @@
 			<label class="control-label">状态：</label>
 			<div class="controls">
 				<form:select path="sts" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('sts')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:options items="${fns:getDictList('sts_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</div>
 		</div>

@@ -50,8 +50,7 @@
 			<label class="control-label">职称：</label>
 			<div class="controls">
 				<form:select path="jobName" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:options items="${fns:getDictList('job_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</div>
 		</div>
@@ -59,8 +58,7 @@
 			<label class="control-label">学历：</label>
 			<div class="controls">
 				<form:select path="education" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:options items="${fns:getDictList('education_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</div>
 		</div>
@@ -83,11 +81,17 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">科室：</label>
+			<div class="controls">
+				<sys:treeselect id="office" name="user.office.id" value="${user.office.id}" labelName="office.name" labelValue="${user.office.name}"
+								title="科室" url="/sys/office/treeData?type=2" cssClass="" allowClear="true" notAllowSelectParent="true"/>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">状态：</label>
 			<div class="controls">
 				<form:select path="sts" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:options items="${fns:getDictList('sts_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</div>
 		</div>

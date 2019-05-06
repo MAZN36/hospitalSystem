@@ -49,8 +49,7 @@
 			<label class="control-label">血型：</label>
 			<div class="controls">
 				<form:select path="bloodType" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:options items="${fns:getDictList('blood_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</div>
 		</div>
@@ -58,15 +57,16 @@
 			<label class="control-label">学历：</label>
 			<div class="controls">
 				<form:select path="education" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:options items="${fns:getDictList('education_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">状态：</label>
 			<div class="controls">
-				<form:input path="sts" htmlEscape="false" maxlength="5" class="input-xlarge "/>
+				<form:select path="sts" class="input-xlarge ">
+					<form:options items="${fns:getDictList('sts_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
 			</div>
 		</div>
 		<div class="control-group">

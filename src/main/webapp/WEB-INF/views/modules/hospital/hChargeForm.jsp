@@ -62,8 +62,7 @@
 			<label class="control-label">支付方式：</label>
 			<div class="controls">
 				<form:select path="paymentType" class="input-xlarge ">
-					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:options items="${fns:getDictList('payment_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</div>
 		</div>
