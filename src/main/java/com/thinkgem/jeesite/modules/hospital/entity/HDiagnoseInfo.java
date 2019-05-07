@@ -20,6 +20,7 @@ public class HDiagnoseInfo extends DataEntity<HDiagnoseInfo> {
 	private String doctorId;		// 医生id
 	private String deptId;		// 科室id
 	private String symptom;		// 诊断症状
+	private String diagnoses; //确诊的病
 	
 	public HDiagnoseInfo() {
 		super();
@@ -73,5 +74,12 @@ public class HDiagnoseInfo extends DataEntity<HDiagnoseInfo> {
 	public void setSymptom(String symptom) {
 		this.symptom = symptom;
 	}
-	
+
+	public String getDiagnoses() {
+		return diagnoses;
+	}
+
+	public void setDiagnoses(String diagnoses) {
+		this.diagnoses = diagnoses;
+	}
 }

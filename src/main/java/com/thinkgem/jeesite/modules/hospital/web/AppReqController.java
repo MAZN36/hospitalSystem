@@ -95,6 +95,18 @@ public class AppReqController extends BaseController {
 				case "callRegistration" : //医生叫号
                     returnStr = reqDelegate.callRegistration(jsonObj);
 					break;
+				case "diagnosePatientInfoList" : //获取诊断之后的病人列表
+					returnStr = reqDelegate.diagnosePatientInfoList(jsonObj);
+					break;
+				case "makePrescription" : //一键开药方
+					returnStr = reqDelegate.makePrescription(jsonObj);
+					break;
+				case "savePrescriptionList" : //确认开处方
+					returnStr = reqDelegate.savePrescriptionList(jsonObj);
+					break;
+				case "drugInfoList" : //获取药品列表
+					returnStr = reqDelegate.drugInfoList(jsonObj);
+					break;
 				default:
 					returnStr = "{\"resultCode\":\"1\",\"resultMessage\":\"未找到对应key值\"}";
 					break;

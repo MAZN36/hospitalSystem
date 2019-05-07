@@ -25,7 +25,9 @@ public class HCharge extends DataEntity<HCharge> {
 	private String paymentNo;		// 流水号
 	private Date paymentDate;		// 收费日期
 	private String sts;		// 状态
-	
+	private String userName;
+	private String idCard;
+
 	public HCharge() {
 		super();
 	}
@@ -103,5 +105,20 @@ public class HCharge extends DataEntity<HCharge> {
 	public void setSts(String sts) {
 		this.sts = sts;
 	}
-	
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getIdCard() {
+		return idCard;
+	}
+
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
+	}
 }

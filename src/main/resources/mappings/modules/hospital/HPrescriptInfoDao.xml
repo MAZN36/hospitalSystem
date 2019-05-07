@@ -10,10 +10,14 @@
 		a.durg_num AS "durgNum",
 		a.durg_usage AS "durgUsage",
 		a.update_date AS "updateDate",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		b.drug_name AS "drugInfo.drugName",
+		b.rent_Price AS "drugInfo.rentPrice",
+		b.sell_price AS "drugInfo.sellPrice"
 	</sql>
 	
 	<sql id="hPrescriptInfoJoins">
+		left join h_drug_info b on a.durg_id=b.id
 	</sql>
     
 	<select id="get" resultType="HPrescriptInfo">

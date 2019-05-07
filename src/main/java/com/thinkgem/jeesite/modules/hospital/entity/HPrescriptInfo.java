@@ -20,6 +20,7 @@ public class HPrescriptInfo extends DataEntity<HPrescriptInfo> {
 	private String durgId;		// 药品id
 	private Integer durgNum;		// 药品数量
 	private String durgUsage;		// 药品用法
+	private HDrugInfo drugInfo; //药品详情
 	
 	public HPrescriptInfo() {
 		super();
@@ -72,5 +73,12 @@ public class HPrescriptInfo extends DataEntity<HPrescriptInfo> {
 	public void setDurgUsage(String durgUsage) {
 		this.durgUsage = durgUsage;
 	}
-	
+
+	public HDrugInfo getDrugInfo() {
+		return drugInfo;
+	}
+
+	public void setDrugInfo(HDrugInfo drugInfo) {
+		this.drugInfo = drugInfo;
+	}
 }

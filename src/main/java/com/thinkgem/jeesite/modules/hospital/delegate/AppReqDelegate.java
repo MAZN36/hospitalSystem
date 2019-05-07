@@ -4,11 +4,19 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.modules.hospital.entity.HCharge;
+import com.thinkgem.jeesite.modules.hospital.entity.HDiagnoseInfo;
 import com.thinkgem.jeesite.modules.hospital.entity.HDoctor;
+import com.thinkgem.jeesite.modules.hospital.entity.HDrugInfo;
 import com.thinkgem.jeesite.modules.hospital.entity.HPatient;
+import com.thinkgem.jeesite.modules.hospital.entity.HPrescriptInfo;
 import com.thinkgem.jeesite.modules.hospital.entity.HRegistration;
+import com.thinkgem.jeesite.modules.hospital.service.HChargeService;
+import com.thinkgem.jeesite.modules.hospital.service.HDiagnoseInfoService;
 import com.thinkgem.jeesite.modules.hospital.service.HDoctorService;
+import com.thinkgem.jeesite.modules.hospital.service.HDrugInfoService;
 import com.thinkgem.jeesite.modules.hospital.service.HPatientService;
+import com.thinkgem.jeesite.modules.hospital.service.HPrescriptInfoService;
 import com.thinkgem.jeesite.modules.hospital.service.HRegistrationService;
 import com.thinkgem.jeesite.modules.hospital.utils.R;
 import com.thinkgem.jeesite.modules.sys.entity.Office;
@@ -44,6 +52,18 @@ public class AppReqDelegate {
 
     @Autowired
     private HRegistrationService registrationService;
+
+    @Autowired
+    private HDiagnoseInfoService diagnoseInfoService;
+
+    @Autowired
+    private HPrescriptInfoService prescriptInfoService;
+
+    @Autowired
+    private HChargeService chargeService;
+
+    @Autowired
+    HDrugInfoService drugInfoService;
 
     /**
      * 获取科室列表
@@ -292,6 +312,206 @@ public class AppReqDelegate {
         resultJson.put("sts",registration.getSts());
         resultJson.putAll(R.appOk("0","叫号成功！"));
         logger.info("结束医生叫号...请求参数为："+jsonObj);
+        return resultJson.toString();
+    }
+
+    /**
+     * 获取诊断之后的病人列表
+     * @return
+     */
+    public String diagnosePatientInfoList(JSONObject jsonObj){
+        logger.info("开始获取诊断之后的病人列表...请求参数为："+jsonObj);
+        JSONObject resultJson = new JSONObject();
+        String docId = jsonObj.getString("loginId");
+        //获取诊断信息
+        HDiagnoseInfo diagnoseInfo = new HDiagnoseInfo();
+        diagnoseInfo.setDoctorId(docId);
+        List<HDiagnoseInfo> diagnoseInfoList = diagnoseInfoService.findList(diagnoseInfo);
+        JSONArray diagnoseInfoArray = new JSONArray();
+        JSONObject diagnoseInfoJson = null;
+        JSONArray prescriptionArray = null;
+        JSONObject prescriptionJson = null;
+        if (diagnoseInfoList!=null){
+            for(HDiagnoseInfo hDiagnoseInfo : diagnoseInfoList){
+                diagnoseInfoJson = new JSONObject();
+                //获取病人信息
+                HPatient patient = patientService.get(hDiagnoseInfo.getPatientId());
+                if (patient!=null&&patient.getUser()!=null){
+                    diagnoseInfoJson.put("patientId",patient.getId());
+                    diagnoseInfoJson.put("name",patient.getUser().getName());
+                    diagnoseInfoJson.put("gender",DictUtils.getDictLabel(patient.getUser().getSex(),"sex","男"));
+                    diagnoseInfoJson.put("age",patient.getUser().getAge());
+                    //症状
+                    diagnoseInfoJson.put("Symptom",hDiagnoseInfo.getSymptom());
+                    diagnoseInfoJson.put("Diagnosis",hDiagnoseInfo.getDiagnoses());
+                    //处方
+                    HPrescriptInfo hPrescriptInfo = new HPrescriptInfo();
+                    hPrescriptInfo.setDiagnoseId(hDiagnoseInfo.getId());
+                    List<HPrescriptInfo> prescriptInfoList = prescriptInfoService.findList(hPrescriptInfo);
+                    if (prescriptInfoList!=null){
+                        prescriptionArray = new JSONArray();
+                        for (HPrescriptInfo prescriptInfo : prescriptInfoList){
+                            HDrugInfo drugInfo = prescriptInfo.getDrugInfo();
+                            if (drugInfo!=null){
+                                prescriptionJson = new JSONObject();
+                                prescriptionJson.put("drugName",drugInfo.getDrugName());
+                                prescriptionJson.put("usage",prescriptInfo.getDurgUsage());
+                                prescriptionJson.put("num",prescriptInfo.getDurgNum());
+                                prescriptionArray.add(prescriptionJson);
+                            }
+                        }
+                        diagnoseInfoJson.put("prescription",prescriptionArray);
+                    }
+                    //获取医生信息
+                    HDoctor doctor = doctorService.get(docId);
+                    if (doctor!=null&&doctor.getUser()!=null){
+                        diagnoseInfoJson.put("docId",doctor.getId());
+                        diagnoseInfoJson.put("doc",doctor.getUser().getName());
+                    }
+                    diagnoseInfoArray.add(diagnoseInfoJson);
+                }
+            }
+        }
+        resultJson.put("patientList",diagnoseInfoArray);
+        resultJson.putAll(R.appOk());
+        logger.info("结束获取诊断之后的病人列表...请求参数为："+jsonObj);
+        return resultJson.toString();
+    }
+
+    /**
+     * TODO 实现DM
+     * 一键开药方
+     * @param jsonObj
+     * @return
+     */
+    public String makePrescription(JSONObject jsonObj){
+        logger.info("开始一键开药方...请求参数为："+jsonObj);
+        JSONObject resultJson = new JSONObject();
+        String symptom = jsonObj.getString("symptom");
+        String diagnosis = jsonObj.getString("diagnosis");
+        HPrescriptInfo hPrescriptInfo = new HPrescriptInfo();
+        List<HPrescriptInfo> prescriptInfoList = prescriptInfoService.findList(hPrescriptInfo);
+        JSONArray prescriptionArray = new JSONArray();
+        JSONObject prescriptionJson = null;
+        if (prescriptInfoList!=null){
+            for (HPrescriptInfo prescriptInfo: prescriptInfoList){
+                HDrugInfo drugInfo = prescriptInfo.getDrugInfo();
+                if (drugInfo!=null){
+                    prescriptionJson = new JSONObject();
+                    prescriptionJson.put("drugName",drugInfo.getDrugName());
+                    prescriptionJson.put("usage",prescriptInfo.getDurgUsage());
+                    prescriptionJson.put("num",prescriptInfo.getDurgNum());
+                    prescriptionArray.add(prescriptionJson);
+                }
+            }
+        }
+        resultJson.put("prescriptionList",prescriptionArray);
+        resultJson.putAll(R.appOk());
+        logger.info("结束一键开药方...请求参数为："+jsonObj);
+        return resultJson.toString();
+    }
+
+    /**
+     * 确认开处方
+     * @param jsonObj
+     * @return
+     */
+    public String savePrescriptionList(JSONObject jsonObj){
+        logger.info("开始确认开处方...请求参数为："+jsonObj);
+        JSONObject resultJson = new JSONObject();
+        String symptom = jsonObj.getString("symptom");
+        String registrationId = jsonObj.getString("registrationId");
+        String remarks = jsonObj.getString("remarks");
+        String diagnosis = jsonObj.getString("diagnosis");
+        JSONArray prescriptionList = jsonObj.getJSONArray("prescriptionList");//药方信息列表
+        HRegistration hRegistration = registrationService.get(registrationId);
+        double receivePrice = 0;
+        if (hRegistration!=null&&hRegistration.getOffice()!=null){
+            //生成诊断信息
+            HDiagnoseInfo diagnoseInfo = new HDiagnoseInfo();
+            diagnoseInfo.setPatientId(hRegistration.getPatientId());
+            diagnoseInfo.setRegistrationId(hRegistration.getId());
+            diagnoseInfo.setDoctorId(hRegistration.getDoctorId());
+            diagnoseInfo.setDeptId(hRegistration.getOffice().getId());
+            diagnoseInfo.setSymptom(symptom);
+            diagnoseInfo.setDiagnoses(diagnosis);
+            diagnoseInfo.setRemarks(remarks);
+            diagnoseInfoService.save(diagnoseInfo);
+            receivePrice = hRegistration.getPrice();
+            hRegistration.setSts("C");
+            registrationService.save(hRegistration);
+            //生成收费单信息
+            HCharge hCharge = new HCharge();
+            hCharge.setPatientId(hRegistration.getPatientId());
+            hCharge.setDiagnoseId(diagnoseInfo.getId());
+            hCharge.setReceivePrice(receivePrice);
+            hCharge.setPaymentNo(DateUtils.formatDate(new Date(),"yyyyMMddHHmmss")+"0000"+hRegistration.getQueueNo());
+            hCharge.setSts("A");
+            chargeService.save(hCharge);
+            //生成处方信息
+            if (prescriptionList!=null){
+                for (Object obj : prescriptionList){
+                    JSONObject prescriptionJson = (JSONObject) obj;
+                    String drugId = prescriptionJson.getString("drugId");
+                    String usage = prescriptionJson.getString("usage");
+                    Integer num = prescriptionJson.getInteger("num");
+                    num = num==null ? 0 : num;
+                    HDrugInfo hDrugInfo = drugInfoService.get(drugId);
+                    if (hDrugInfo!=null){
+                        HPrescriptInfo prescriptInfo = new HPrescriptInfo();
+                        prescriptInfo.setDiagnoseId(diagnoseInfo.getId());
+                        prescriptInfo.setChargeId(hCharge.getId());
+                        prescriptInfo.setDurgId(hDrugInfo.getId());
+                        prescriptInfo.setDurgNum(num);
+                        prescriptInfo.setDurgUsage(usage);
+                        prescriptInfoService.save(prescriptInfo);
+                        //更新药品库数量
+                        int inventoryNum = hDrugInfo.getInventoryNum() - num;
+                        hDrugInfo.setInventoryNum(inventoryNum<0 ? 0 : inventoryNum);
+                        drugInfoService.save(hDrugInfo);
+                        Double sellPrice = hDrugInfo.getSellPrice()==null ? 0 : hDrugInfo.getSellPrice();
+                        receivePrice += sellPrice*num;
+                    }
+                }
+                //更新收费信息
+                hCharge.setReceivePrice(receivePrice);
+                chargeService.save(hCharge);
+            }
+            resultJson.putAll(R.appOk());
+        }else {
+            resultJson.putAll(R.appOk("1","挂号信息不存在！"));
+        }
+        logger.info("结束确认开处方...请求参数为："+jsonObj);
+        return resultJson.toString();
+    }
+
+    /**
+     * 获取药品列表
+     * @param jsonObj
+     * @return
+     */
+    public String drugInfoList(JSONObject jsonObj){
+        logger.info("开始获取药品列表...请求参数为："+jsonObj);
+        JSONObject resultJson = new JSONObject();
+        HDrugInfo hDrugInfo = new HDrugInfo();
+        hDrugInfo.setSts("A");
+        List<HDrugInfo> drugInfoList = drugInfoService.findList(hDrugInfo);
+        JSONArray drugInfoArray = new JSONArray();
+        JSONObject drugInfoJson = null;
+        if (drugInfoList!=null){
+            for (HDrugInfo drugInfo : drugInfoList){
+                drugInfoJson = new JSONObject();
+                drugInfoJson.put("drugId",drugInfo.getId());
+                drugInfoJson.put("drugName",drugInfo.getDrugName());
+                drugInfoJson.put("sellPrice",drugInfo.getSellPrice());
+                drugInfoJson.put("inventoryNum",drugInfo.getInventoryNum());
+                drugInfoJson.put("drugRemarks",drugInfo.getGrugRemarks());
+                drugInfoArray.add(drugInfoJson);
+            }
+        }
+        resultJson.put("drugList",drugInfoArray);
+        resultJson.putAll(R.appOk());
+        logger.info("结束获取药品列表...请求参数为："+jsonObj);
         return resultJson.toString();
     }
 }

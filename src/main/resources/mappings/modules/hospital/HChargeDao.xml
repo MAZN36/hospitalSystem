@@ -13,10 +13,14 @@
 		a.payment_date AS "paymentDate",
 		a.sts AS "sts",
 		a.update_date AS "updateDate",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		u.name AS "userName",
+		u.id_card AS "idCard"
 	</sql>
 	
 	<sql id="hChargeJoins">
+		left join h_patient b on a.patient_id = b.id
+		left join sys_user u on b.user_id=u.id
 	</sql>
     
 	<select id="get" resultType="HCharge">
@@ -106,6 +110,7 @@
 			payment_type = #{paymentType},
 			payment_no = #{paymentNo},
 			payment_date = #{paymentDate},
+			sts = #{sts},
 			update_date = #{updateDate},
 			remarks = #{remarks}
 		WHERE id = #{id}

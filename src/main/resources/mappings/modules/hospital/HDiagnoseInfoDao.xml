@@ -10,6 +10,7 @@
 		a.dept_id AS "deptId",
 		a.symptom AS "symptom",
 		a.update_date AS "updateDate",
+		a.diagnoses AS "diagnoses",
 		a.remarks AS "remarks"
 	</sql>
 	
@@ -48,6 +49,12 @@
 					<if test="dbName == 'oracle'">'%'||#{symptom}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{symptom}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{symptom},'%')</if>
+			</if>
+			<if test="diagnoses != null and diagnoses != ''">
+				AND a.diagnoses LIKE
+					<if test="dbName == 'oracle'">'%'||#{diagnoses}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{diagnoses}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{diagnoses},'%')</if>
 			</if>
 			<if test="remarks != null and remarks != ''">
 				AND a.remarks LIKE 
@@ -92,6 +99,7 @@
 			doctor_id,
 			dept_id,
 			symptom,
+			diagnoses,
 			update_date,
 			remarks
 		) VALUES (
@@ -101,6 +109,7 @@
 			#{doctorId},
 			#{deptId},
 			#{symptom},
+			#{diagnoses},
 			#{updateDate},
 			#{remarks}
 		)
@@ -113,6 +122,7 @@
 			doctor_id = #{doctorId},
 			dept_id = #{deptId},
 			symptom = #{symptom},
+			diagnoses = #{diagnoses},
 			update_date = #{updateDate},
 			remarks = #{remarks}
 		WHERE id = #{id}
