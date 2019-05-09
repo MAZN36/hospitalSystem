@@ -280,10 +280,11 @@ public class AppReqDelegate {
                 if (patient!=null&&patient.getUser()!=null){
                     patientJson.put("registrationId",hRegistration.getId());
                     patientJson.put("name",patient.getUser().getName());
+                    patientJson.put("phoneNum",patient.getUser().getMobile());
                     patientJson.put("identify",patient.getUser().getIdCard());
                     patientJson.put("gender",DictUtils.getDictLabel(patient.getUser().getSex(),"sex","男"));
                     patientJson.put("age",patient.getUser().getAge());
-                    patientJson.put("time",DateUtils.formatDate(hRegistration.getBookDate()));
+                    patientJson.put("time",DateUtils.formatDateTime(hRegistration.getBookDate()));
                     patientJson.put("sts",hRegistration.getSts());
                     patientArray.add(patientJson);
                 }
@@ -399,6 +400,7 @@ public class AppReqDelegate {
                 if (drugInfo!=null){
                     prescriptionJson = new JSONObject();
                     prescriptionJson.put("drugName",drugInfo.getDrugName());
+                    prescriptionJson.put("drugId",drugInfo.getId());
                     prescriptionJson.put("usage",prescriptInfo.getDurgUsage());
                     prescriptionJson.put("num",prescriptInfo.getDurgNum());
                     prescriptionArray.add(prescriptionJson);
