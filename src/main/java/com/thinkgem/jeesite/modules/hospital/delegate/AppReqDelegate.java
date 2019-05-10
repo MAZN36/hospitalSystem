@@ -19,6 +19,7 @@ import com.thinkgem.jeesite.modules.hospital.service.HPatientService;
 import com.thinkgem.jeesite.modules.hospital.service.HPrescriptInfoService;
 import com.thinkgem.jeesite.modules.hospital.service.HRegistrationService;
 import com.thinkgem.jeesite.modules.hospital.utils.R;
+import com.thinkgem.jeesite.modules.hospital.utils.SimilarityRatio;
 import com.thinkgem.jeesite.modules.sys.entity.Office;
 import com.thinkgem.jeesite.modules.sys.entity.Role;
 import com.thinkgem.jeesite.modules.sys.entity.User;
@@ -380,7 +381,7 @@ public class AppReqDelegate {
     }
 
     /**
-     * TODO 实现DM
+     *
      * 一键开药方
      * @param jsonObj
      * @return
@@ -390,8 +391,30 @@ public class AppReqDelegate {
         JSONObject resultJson = new JSONObject();
         String symptom = jsonObj.getString("symptom");
         String diagnosis = jsonObj.getString("diagnosis");
-        HPrescriptInfo hPrescriptInfo = new HPrescriptInfo();
-        List<HPrescriptInfo> prescriptInfoList = prescriptInfoService.findList(hPrescriptInfo);
+
+        String str = symptom+diagnosis;
+        float similarityRatio = 0;
+        String hDiagnoseInfoId = null;
+        List<HPrescriptInfo> prescriptInfoList = null;
+        List<HDiagnoseInfo> diagnoseInfoList = diagnoseInfoService.findList(new HDiagnoseInfo());
+        if (diagnoseInfoList!=null){
+            for (HDiagnoseInfo hDiagnoseInfo : diagnoseInfoList){
+                String target = hDiagnoseInfo.getSymptom() + hDiagnoseInfo.getDiagnoses();
+                float temp = SimilarityRatio.getSimilarityRatio(str, target);
+                if (temp > similarityRatio){
+                    HPrescriptInfo hPrescriptInfo = new HPrescriptInfo();
+                    hPrescriptInfo.setDiagnoseId(hDiagnoseInfo.getId());
+                    List<HPrescriptInfo> tmpList = prescriptInfoService.findList(hPrescriptInfo);
+                    if (tmpList!=null&&tmpList.size()>0){
+                        hDiagnoseInfoId = hDiagnoseInfo.getId();
+                        similarityRatio = temp;
+                        prescriptInfoList = tmpList;
+                    }
+                }
+                logger.info("比较结果：temp="+temp+",similarityRatio="+similarityRatio+", str="+str+",target="+target);
+            }
+        }
+        logger.info("最大结果：similarityRatio="+similarityRatio+",hDiagnoseInfoId="+hDiagnoseInfoId);
         JSONArray prescriptionArray = new JSONArray();
         JSONObject prescriptionJson = null;
         if (prescriptInfoList!=null){
@@ -400,13 +423,15 @@ public class AppReqDelegate {
                 if (drugInfo!=null){
                     prescriptionJson = new JSONObject();
                     prescriptionJson.put("drugName",drugInfo.getDrugName());
-                    prescriptionJson.put("drugId",drugInfo.getId());
+                    prescriptionJson.put("drugId",prescriptInfo.getDurgId());
                     prescriptionJson.put("usage",prescriptInfo.getDurgUsage());
                     prescriptionJson.put("num",prescriptInfo.getDurgNum());
                     prescriptionArray.add(prescriptionJson);
                 }
             }
         }
+        String matchNum = similarityRatio*100 + "%";
+        resultJson.put("matchNum",matchNum);
         resultJson.put("prescriptionList",prescriptionArray);
         resultJson.putAll(R.appOk());
         logger.info("结束一键开药方...请求参数为："+jsonObj);
@@ -447,6 +472,7 @@ public class AppReqDelegate {
             hCharge.setPatientId(hRegistration.getPatientId());
             hCharge.setDiagnoseId(diagnoseInfo.getId());
             hCharge.setReceivePrice(receivePrice);
+            hCharge.setProceedsPrice(receivePrice);
             hCharge.setPaymentNo(DateUtils.formatDate(new Date(),"yyyyMMddHHmmss")+"0000"+hRegistration.getQueueNo());
             hCharge.setSts("A");
             chargeService.save(hCharge);
