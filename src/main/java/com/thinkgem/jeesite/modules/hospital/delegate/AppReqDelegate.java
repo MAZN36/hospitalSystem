@@ -503,6 +503,7 @@ public class AppReqDelegate {
                 }
                 //更新收费信息
                 hCharge.setReceivePrice(receivePrice);
+                hCharge.setProceedsPrice(receivePrice);
                 chargeService.save(hCharge);
             }
             resultJson.putAll(R.appOk());
